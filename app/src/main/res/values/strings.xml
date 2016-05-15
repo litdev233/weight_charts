@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">体重记录</string>
     <string name="action_settings">设置</string>
+    <string name="BmobAppID">12da885f91e0c17dddbbd8da20d5be2b</string>
 </resources>

@@ -14,6 +14,16 @@ import com.flyco.dialog.listener.OnBtnClickL;
 import com.flyco.dialog.widget.NormalDialog;
 
 import net.litdev.weight_charts.R;
+import net.litdev.weight_charts.entity.WeightData;
+import net.litdev.weight_charts.utils.UtilsToast;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+import cn.bmob.v3.Bmob;
+import cn.bmob.v3.datatype.BmobDate;
+import cn.bmob.v3.listener.SaveListener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,9 +32,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Bmob.initialize(this, getString(R.string.BmobAppID));
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

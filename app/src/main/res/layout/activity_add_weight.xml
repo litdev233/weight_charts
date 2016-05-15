@@ -56,10 +56,9 @@
         <EditText
             android:id="@+id/tv_weight"
             style="@style/EditText"
-            android:hint="选择日期"
+            android:hint="填写体重"
             android:maxLength="6"
-            android:numeric="decimal"
-            android:text="52.85" />
+            android:numeric="decimal"/>
 
 
         <ImageView style="@style/RightArrow" />
@@ -73,6 +72,7 @@
         android:layout_marginTop="16dp"
         android:background="@color/colorPrimary"
         android:text="完成"
+        android:id="@+id/btn_add"
         android:textColor="#f5f6f7"
         android:textSize="20dp" />
 
