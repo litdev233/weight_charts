@@ -13,21 +13,26 @@ import android.widget.ListView;
 
 import com.flyco.dialog.listener.OnBtnClickL;
 import com.flyco.dialog.widget.NormalDialog;
+import com.squareup.okhttp.internal.Util;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import net.litdev.weight_charts.R;
 import net.litdev.weight_charts.adapter.AdapterHomeList;
 import net.litdev.weight_charts.entity.WeightData;
+import net.litdev.weight_charts.utils.UtilsToast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import cn.bmob.v3.Bmob;
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.listener.FindListener;
 
 public class MainActivity extends AppCompatActivity {
 
     private ListView ll_list;
     private AVLoadingIndicatorView avloadingIndicatorView;//Loading
-    private ArrayList<WeightData> data_list;
+    private List<WeightData> data_list;
     private AdapterHomeList adapter;
 
     @Override
@@ -41,6 +46,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initData(){
+        final BmobQuery<WeightData> query = new BmobQuery<>();
+        query.setLimit(30);
+        query.order("-AddTime");
+        query.findObjects(this, new FindListener<WeightData>() {
+            @Override
+            public void onSuccess(List<WeightData> list) {
+                ll_list.setVisibility(View.VISIBLE);
+                avloadingIndicatorView.setVisibility(View.GONE);
+                for (WeightData item: list) {
+                    if(!data_list.contains(item)){
+                        data_list.add(item);
+                    }
+                }
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                ll_list.setVisibility(View.GONE);
+                avloadingIndicatorView.setVisibility(View.GONE);
+                UtilsToast.show(MainActivity.this,"数据加载失败："+s);
+            }
+        });
     }
 
     private void initView() {

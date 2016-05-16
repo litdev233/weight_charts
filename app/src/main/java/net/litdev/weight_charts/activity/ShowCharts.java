@@ -9,7 +9,7 @@ import com.wang.avi.AVLoadingIndicatorView;
 
 import net.litdev.weight_charts.R;
 import net.litdev.weight_charts.entity.WeightData;
-import net.litdev.weight_charts.utils.DateUtils;
+import net.litdev.weight_charts.utils.UtilsDate;
 import net.litdev.weight_charts.utils.UtilsToast;
 
 import java.text.ParseException;
@@ -118,7 +118,7 @@ public class ShowCharts extends AppCompatActivity {
         query.findObjects(ShowCharts.this, new FindListener<WeightData>() {
             @Override
             public void onSuccess(List<WeightData> list) {
-                SimpleDateFormat sdf=  new SimpleDateFormat(DateUtils.DATE_FORMAT_DEFAULT);
+                SimpleDateFormat sdf=  new SimpleDateFormat(UtilsDate.DATE_FORMAT_DEFAULT);
                 Calendar ca = Calendar.getInstance();
                 for (int i =0;i< numberOfPoints;++i){
                     WeightData entity = list.get(i);
