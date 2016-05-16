@@ -20,4 +20,13 @@
         android:visibility="visible"
         app:indicator="BallPulse"
         app:indicator_color="@color/colorAccent" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/ll_list"
+        android:cacheColorHint="@null"
+        >
+    </ListView>
+
 </RelativeLayout>

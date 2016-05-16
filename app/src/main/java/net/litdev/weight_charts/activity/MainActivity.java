@@ -9,65 +9,82 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
 
 import com.flyco.dialog.listener.OnBtnClickL;
 import com.flyco.dialog.widget.NormalDialog;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import net.litdev.weight_charts.R;
+import net.litdev.weight_charts.adapter.AdapterHomeList;
 import net.litdev.weight_charts.entity.WeightData;
-import net.litdev.weight_charts.utils.UtilsToast;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.ArrayList;
 
 import cn.bmob.v3.Bmob;
-import cn.bmob.v3.datatype.BmobDate;
-import cn.bmob.v3.listener.SaveListener;
 
 public class MainActivity extends AppCompatActivity {
 
+    private ListView ll_list;
+    private AVLoadingIndicatorView avloadingIndicatorView;//Loading
+    private ArrayList<WeightData> data_list;
+    private AdapterHomeList adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Bmob.initialize(this, getString(R.string.BmobAppID));
+        initView();
 
+        initData();
+    }
+
+    private void initData(){
+    }
+
+    private void initView() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        ll_list = (ListView) findViewById(R.id.ll_list);
+        avloadingIndicatorView = (AVLoadingIndicatorView) findViewById(R.id.avloadingIndicatorView);
+
+        data_list =new ArrayList<>();
+        adapter = new AdapterHomeList(data_list,this);
+        ll_list.setAdapter(adapter);
+        ll_list.setVisibility(View.GONE);
+        avloadingIndicatorView.setVisibility(View.VISIBLE);
+
         setSupportActionBar(toolbar);
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 
+        final FloatingActionButton fab_charts = (FloatingActionButton) findViewById(R.id.fab_charts);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
                 startActivity(new Intent(MainActivity.this,AddWeight.class));
+            }
+        });
+        fab_charts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this,ShowCharts.class));
             }
         });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -94,4 +111,5 @@ public class MainActivity extends AppCompatActivity {
         }
         return false;
     }
+
 }
