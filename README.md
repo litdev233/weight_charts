@@ -6,5 +6,5 @@
 
 * **[HelloCharts](https://github.com/lecho/hellocharts-android)**
 * **[FlycoDialog](https://github.com/H07000223/FlycoDialog_Master)**
-* **[AVLoadingIndicatorView](https://github.com/81813780/AVLoadingIndicatorView)**
+* **[PullToRefresh](https://github.com/chrisbanes/Android-PullToRefresh)**
 * 后续还会用到其他的...

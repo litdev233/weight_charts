@@ -52,5 +52,7 @@ dependencies {
     //自`V3.4.3版本`开始，使用`okhttp`优化SDK的网络框架
     compile 'com.squareup.okhttp:okhttp:2.4.0'
     compile 'com.squareup.okio:okio:1.4.0'
-
+    //PullToRefresh
+    compile project(':PullToRefreshListFragment')
+    compile project(':PullToRefreshViewPager')
 }

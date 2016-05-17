@@ -10,6 +10,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
+
 import net.litdev.weight_charts.R;
 import net.litdev.weight_charts.adapter.AdapterHomeList;
 import net.litdev.weight_charts.entity.WeightData;
@@ -24,7 +27,7 @@ import cn.bmob.v3.listener.FindListener;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ListView ll_list;
+    private PullToRefreshListView ll_list;
     private List<WeightData> data_list;
     private AdapterHomeList adapter;
     private final int limit=10;
@@ -70,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initView() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        ll_list = (ListView) findViewById(R.id.ll_list);
+        ll_list = (PullToRefreshListView) findViewById(R.id.ll_list);
         data_list =new ArrayList<>();
         adapter = new AdapterHomeList(data_list,this);
         ll_list.setAdapter(adapter);
@@ -91,6 +94,15 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this,ShowCharts.class));
             }
         });
+
+        ll_list.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
+            @Override
+            public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+                UtilsToast.show(MainActivity.this,"执行刷新");
+                ll_list.onRefreshComplete();
+            }
+        });
+
     }
 
     @Override
