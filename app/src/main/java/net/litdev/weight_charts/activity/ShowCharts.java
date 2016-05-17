@@ -1,11 +1,8 @@
 package net.litdev.weight_charts.activity;
 
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.TextView;
-
-import com.wang.avi.AVLoadingIndicatorView;
 
 import net.litdev.weight_charts.R;
 import net.litdev.weight_charts.entity.WeightData;
@@ -31,12 +28,11 @@ import lecho.lib.hellocharts.model.Viewport;
 import lecho.lib.hellocharts.util.ChartUtils;
 import lecho.lib.hellocharts.view.LineChartView;
 
-public class ShowCharts extends AppCompatActivity {
+public class ShowCharts extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     private LineChartView chart;
     private LineChartData data;
-    private AVLoadingIndicatorView avloadingIndicatorView;
-    private TextView tv_error_msg;
+    private SwipeRefreshLayout swipe_refresh;
 
     /**
      * 几条折线图
@@ -70,20 +66,54 @@ public class ShowCharts extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_charts);
 
+        initView();
+        generateValues();
+
+    }
+
+    /**
+     * 加载视图
+     */
+    private void initView() {
+        swipe_refresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
+        swipe_refresh.setOnRefreshListener(this);
+        //设置下拉出现小圆圈是否是缩放出现，出现的位置，最大的下拉位置
+        swipe_refresh.setProgressViewOffset(true, 50, 200);
+        //设置下拉圆圈的大小，两个值 LARGE， DEFAULT
+        swipe_refresh.setSize(SwipeRefreshLayout.LARGE);
+        // 设置下拉圆圈上的颜色，蓝色、绿色、橙色、红色
+        swipe_refresh.setColorSchemeResources(
+                android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+        // 通过 setEnabled(false) 禁用下拉刷新
+        //mySwipeRefreshLayout.setEnabled(false);
+
+        // 设定下拉圆圈的背景
+        swipe_refresh.setProgressBackgroundColorSchemeResource(R.color.colorPrimaryDark);
+        //通过 setRefreshing(false) 和 setRefreshing(true) 来手动调用刷新的动画。
+
         chart = (LineChartView) findViewById(R.id.chart);
-        avloadingIndicatorView = (AVLoadingIndicatorView) findViewById(R.id.avloadingIndicatorView);
-        tv_error_msg = (TextView) findViewById(R.id.tv_error_msg);
         getSupportActionBar().setTitle("最近体重变化图");
 
         chart.setOnValueTouchListener(new ValueTouchListener());
-        //chart.setInteractive(true); //是否可以缩放
+        //chart.setInteractive(false); //是否可以缩放
         chart.setValueSelectionEnabled(true);//节点点击后放大
-        generateValues();
 
-        //禁用视图重新计算，see toggleCubic() method for more info.
         chart.setViewportCalculationEnabled(false);
-
         resetViewport();
+    }
+
+    /**
+     * 刷新
+     */
+    @Override
+    public void onRefresh() {
+        generateValues();
+        //设置刷新完成
+        swipe_refresh.setRefreshing(false);
+        UtilsToast.show(this,"refresh done");
     }
 
     /**
@@ -103,15 +133,6 @@ public class ShowCharts extends AppCompatActivity {
      * 设置X轴数据
      */
     private void generateValues() {
-        /*for (int i = 0; i < numberOfLines; ++i) {
-            for (int j = 0; j < numberOfPoints; ++j) {
-                randomNumbersTab[i][j] = (float) Math.random() * 90f;
-            }
-        }*/
-        chart.setVisibility(View.GONE);
-        avloadingIndicatorView.setVisibility(View.VISIBLE);
-        tv_error_msg.setVisibility(View.GONE);
-
         final BmobQuery<WeightData> query = new BmobQuery<>();
         query.setLimit(numberOfPoints);
         query.order("-AddTime");
@@ -130,21 +151,16 @@ public class ShowCharts extends AppCompatActivity {
                         xText[i] = "/";
                     }
                 }
-
-                chart.setVisibility(View.VISIBLE);
-                avloadingIndicatorView.setVisibility(View.GONE);
-                tv_error_msg.setVisibility(View.GONE);
                 generateData();
             }
 
             @Override
             public void onError(int i, String s) {
-                chart.setVisibility(View.GONE);
-                avloadingIndicatorView.setVisibility(View.GONE);
-                tv_error_msg.setVisibility(View.VISIBLE);
-                tv_error_msg.setText("Error:"+s);
+                UtilsToast.show(ShowCharts.this,"Error："+s);
+
             }
         });
+
 
     }
 

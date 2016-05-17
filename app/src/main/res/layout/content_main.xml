@@ -12,20 +12,16 @@
     tools:context=".activity.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <com.wang.avi.AVLoadingIndicatorView
-        android:layout_centerInParent="true"
-        android:id="@+id/avloadingIndicatorView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="visible"
-        app:indicator="BallPulse"
-        app:indicator_color="@color/colorAccent" />
-
-    <ListView
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/ll_list"
-        >
-    </ListView>
+        android:layout_height="match_parent">
+
+        <ListView
+            android:id="@+id/ll_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></ListView>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

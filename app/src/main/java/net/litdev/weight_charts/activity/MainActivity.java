@@ -5,16 +5,10 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
-
-import com.flyco.dialog.listener.OnBtnClickL;
-import com.flyco.dialog.widget.NormalDialog;
-import com.squareup.okhttp.internal.Util;
-import com.wang.avi.AVLoadingIndicatorView;
 
 import net.litdev.weight_charts.R;
 import net.litdev.weight_charts.adapter.AdapterHomeList;
@@ -31,9 +25,9 @@ import cn.bmob.v3.listener.FindListener;
 public class MainActivity extends AppCompatActivity {
 
     private ListView ll_list;
-    private AVLoadingIndicatorView avloadingIndicatorView;//Loading
     private List<WeightData> data_list;
     private AdapterHomeList adapter;
+    private final int limit=10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,25 +41,28 @@ public class MainActivity extends AppCompatActivity {
 
     private void initData(){
         final BmobQuery<WeightData> query = new BmobQuery<>();
-        query.setLimit(30);
         query.order("-AddTime");
+        query.setLimit(limit);
+
         query.findObjects(this, new FindListener<WeightData>() {
             @Override
             public void onSuccess(List<WeightData> list) {
-                ll_list.setVisibility(View.VISIBLE);
-                avloadingIndicatorView.setVisibility(View.GONE);
-                for (WeightData item: list) {
-                    if(!data_list.contains(item)){
-                        data_list.add(item);
+                if(list.size() > 0){
+                    for (WeightData item: list) {
+                        if(!data_list.contains(item)){
+                            data_list.add(item);
+                        }
                     }
+                    adapter.notifyDataSetChanged();
+
                 }
-                adapter.notifyDataSetChanged();
+                else {
+                    UtilsToast.show(MainActivity.this,"没有更多数据了");
+                }
             }
 
             @Override
             public void onError(int i, String s) {
-                ll_list.setVisibility(View.GONE);
-                avloadingIndicatorView.setVisibility(View.GONE);
                 UtilsToast.show(MainActivity.this,"数据加载失败："+s);
             }
         });
@@ -74,14 +71,9 @@ public class MainActivity extends AppCompatActivity {
     private void initView() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         ll_list = (ListView) findViewById(R.id.ll_list);
-        avloadingIndicatorView = (AVLoadingIndicatorView) findViewById(R.id.avloadingIndicatorView);
-
         data_list =new ArrayList<>();
         adapter = new AdapterHomeList(data_list,this);
         ll_list.setAdapter(adapter);
-        ll_list.setVisibility(View.GONE);
-        avloadingIndicatorView.setVisibility(View.VISIBLE);
-
         setSupportActionBar(toolbar);
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 
@@ -116,28 +108,21 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private long lastClickTime = 0;
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {//退出
-            final NormalDialog dialog = new NormalDialog(this);//创建对话框实例
-            dialog.title("提醒").content("确定退出应用?").show();
-            dialog.setOnBtnClickL(//设置按钮监听
-                    new OnBtnClickL() {
-                        @Override
-                        public void onBtnClick() {
-                            dialog.dismiss();
-                        }
-                    },
-                    new OnBtnClickL() {
-                        @Override
-                        public void onBtnClick() {
-                            dialog.dismiss();
-                            finish();
-                            dialog.dismiss();
-                        }
-                    });
+    public void onBackPressed() {
+        if(lastClickTime <= 0){
+            UtilsToast.show(MainActivity.this,"再按一次退出应用");
+            lastClickTime = System.currentTimeMillis();
+        }else{
+            long currentClickTime = System.currentTimeMillis();
+            if(currentClickTime - lastClickTime < 1000){
+                finish();
+            }else{
+                UtilsToast.show(MainActivity.this,"再按一次退出应用");
+                lastClickTime = currentClickTime;
+            }
         }
-        return false;
     }
 
 }

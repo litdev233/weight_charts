@@ -9,33 +9,17 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".activity.ShowCharts">
-
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tv_error_msg"
-        android:text="Loading Error..."
-        android:textSize="20dp"
-        android:visibility="gone"
-        android:layout_centerInParent="true"
-        />
-
-    <com.wang.avi.AVLoadingIndicatorView
-        android:layout_centerInParent="true"
-        android:id="@+id/avloadingIndicatorView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:indicator="BallPulse"
-        app:indicator_color="@color/colorAccent" />
-
-    <lecho.lib.hellocharts.view.LineChartView
-        android:id="@+id/chart"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
-        android:visibility="gone"
-        android:padding="8dp"
-        android:layout_height="match_parent" >
-    </lecho.lib.hellocharts.view.LineChartView>
+        android:layout_height="match_parent">
 
+        <lecho.lib.hellocharts.view.LineChartView
+            android:id="@+id/chart"
+            android:layout_width="match_parent"
+            android:padding="8dp"
+            android:layout_height="match_parent" >
+        </lecho.lib.hellocharts.view.LineChartView>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 </RelativeLayout>
