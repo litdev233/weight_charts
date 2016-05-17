@@ -17,6 +17,7 @@ import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.FindListener;
+import lecho.lib.hellocharts.formatter.SimpleLineChartValueFormatter;
 import lecho.lib.hellocharts.listener.LineChartOnValueSelectListener;
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;
@@ -175,6 +176,7 @@ public class ShowCharts extends AppCompatActivity implements SwipeRefreshLayout.
         for (int i = 0; i < numberOfLines; ++i) {
 
             List<PointValue> values = new ArrayList<PointValue>();
+
             for (int j = 0; j < numberOfPoints; ++j) {
                 values.add(new PointValue(j, (float) randomNumbersTab[i][j]));
                 axisValuesX.add(new AxisValue(j).setLabel(xText[j]));//设置X轴文本
@@ -189,6 +191,7 @@ public class ShowCharts extends AppCompatActivity implements SwipeRefreshLayout.
             line.setHasLabelsOnlyForSelected(hasLabelForSelected);
             line.setHasLines(hasLines);
             line.setHasPoints(hasPoints);
+            line.setFormatter(new SimpleLineChartValueFormatter(2)); //设置Y轴数据保留小数点后面两位
             if (pointsHaveDifferentColor){
                 line.setPointColor(ChartUtils.COLORS[(i + 1) % ChartUtils.COLORS.length]);
             }
