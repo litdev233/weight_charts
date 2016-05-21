@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import net.litdev.weight_charts.R;
 import net.litdev.weight_charts.entity.WeightData;
+import net.litdev.weight_charts.utils.AppManager;
 import net.litdev.weight_charts.utils.UtilsDate;
 import net.litdev.weight_charts.utils.UtilsToast;
 
@@ -66,7 +67,7 @@ public class ShowCharts extends AppCompatActivity implements SwipeRefreshLayout.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_charts);
-
+        AppManager.getAppManager().addActivity(this);
         initView();
         generateValues();
 
@@ -228,7 +229,7 @@ public class ShowCharts extends AppCompatActivity implements SwipeRefreshLayout.
     private class ValueTouchListener implements LineChartOnValueSelectListener {
         @Override
         public void onValueSelected(int lineIndex, int pointIndex, PointValue value) {
-            UtilsToast.show(ShowCharts.this,"体重："+value.getY()+"KG");
+            UtilsToast.show(ShowCharts.this, "体重：" + value.getY() + "KG");
         }
 
         @Override

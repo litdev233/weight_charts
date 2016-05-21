@@ -18,6 +18,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import net.litdev.weight_charts.R;
 import net.litdev.weight_charts.adapter.AdapterHomeList;
 import net.litdev.weight_charts.entity.WeightData;
+import net.litdev.weight_charts.utils.AppManager;
 import net.litdev.weight_charts.utils.UtilsToast;
 
 import java.util.ArrayList;
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Bmob.initialize(this, getString(R.string.BmobAppID));
+        AppManager.getAppManager().addActivity(this);
         initView();
     }
 
@@ -221,7 +223,7 @@ public class MainActivity extends AppCompatActivity {
         }else{
             long currentClickTime = System.currentTimeMillis();
             if(currentClickTime - lastClickTime < 1000){
-                finish();
+                AppManager.getAppManager().AppExit(this);
             }else{
                 UtilsToast.show(MainActivity.this,"再按一次退出应用");
                 lastClickTime = currentClickTime;

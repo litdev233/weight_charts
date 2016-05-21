@@ -1,6 +1,5 @@
 package net.litdev.weight_charts.activity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -11,11 +10,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import net.litdev.weight_charts.R;
 import net.litdev.weight_charts.entity.WeightData;
 import net.litdev.weight_charts.inter.DialogDateListener;
+import net.litdev.weight_charts.utils.AppManager;
 import net.litdev.weight_charts.utils.UtilsToast;
 import net.litdev.weight_charts.widget.CustomDateDialog;
 import net.litdev.weight_charts.widget.CustomTimeDialog;
@@ -41,6 +40,7 @@ public class AddWeight extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_weight);
+        AppManager.getAppManager().addActivity(this);
         ActionBar bar = getSupportActionBar();
         bar.setTitle("新增记录");
 
@@ -88,9 +88,14 @@ public class AddWeight extends AppCompatActivity {
                 UtilsToast.show(AddWeight.this,"获取时间有误");
                 return;
             }
+            double weght =Double.parseDouble(tv_weight.getText().toString().trim());
+            if(weght >70 || weght < 40){
+                UtilsToast.show(AddWeight.this,"体重数据有误");
+                return;
+            }
             btn_add.setEnabled(false);
             WeightData wd = new WeightData();
-            wd.setWeight(Double.parseDouble(tv_weight.getText().toString().trim()));
+            wd.setWeight(weght);
             wd.setAddTime(new BmobDate(date == null ? new Date(): date));
 
             wd.save(AddWeight.this, new SaveListener() {
