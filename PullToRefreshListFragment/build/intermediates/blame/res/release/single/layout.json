@@ -1,0 +1,26 @@
+[
+    {
+        "merged": "C:\\Users\\litde\\AndroidStudioProjects\\weight_charts\\PullToRefreshListFragment\\build\\intermediates\\res\\merged\\release\\layout\\pull_to_refresh_header_vertical.xml",
+        "source": "C:\\Users\\litde\\AndroidStudioProjects\\weight_charts\\PullToRefreshListFragment\\build\\intermediates\\exploded-aar\\weight_charts\\PullToRefresh\\unspecified\\res\\layout\\pull_to_refresh_header_vertical.xml"
+    },
+    {
+        "merged": "C:\\WorkspacesASProject\\weight_charts\\PullToRefreshListFragment\\build\\intermediates\\res\\merged\\release\\layout\\need_this_for_maven.xml",
+        "source": "C:\\WorkspacesASProject\\weight_charts\\PullToRefreshListFragment\\res\\layout\\need_this_for_maven.xml"
+    },
+    {
+        "merged": "C:\\WorkspacesASProject\\weight_charts\\PullToRefreshListFragment\\build\\intermediates\\res\\merged\\release\\layout\\pull_to_refresh_header_horizontal.xml",
+        "source": "C:\\WorkspacesASProject\\weight_charts\\PullToRefreshListFragment\\build\\intermediates\\exploded-aar\\weight_charts\\PullToRefresh\\unspecified\\res\\layout\\pull_to_refresh_header_horizontal.xml"
+    },
+    {
+        "merged": "C:\\Users\\litde\\AndroidStudioProjects\\weight_charts\\PullToRefreshListFragment\\build\\intermediates\\res\\merged\\release\\layout\\pull_to_refresh_header_horizontal.xml",
+        "source": "C:\\Users\\litde\\AndroidStudioProjects\\weight_charts\\PullToRefreshListFragment\\build\\intermediates\\exploded-aar\\weight_charts\\PullToRefresh\\unspecified\\res\\layout\\pull_to_refresh_header_horizontal.xml"
+    },
+    {
+        "merged": "C:\\WorkspacesASProject\\weight_charts\\PullToRefreshListFragment\\build\\intermediates\\res\\merged\\release\\layout\\pull_to_refresh_header_vertical.xml",
+        "source": "C:\\WorkspacesASProject\\weight_charts\\PullToRefreshListFragment\\build\\intermediates\\exploded-aar\\weight_charts\\PullToRefresh\\unspecified\\res\\layout\\pull_to_refresh_header_vertical.xml"
+    },
+    {
+        "merged": "C:\\Users\\litde\\AndroidStudioProjects\\weight_charts\\PullToRefreshListFragment\\build\\intermediates\\res\\merged\\release\\layout\\need_this_for_maven.xml",
+        "source": "C:\\Users\\litde\\AndroidStudioProjects\\weight_charts\\PullToRefreshListFragment\\res\\layout\\need_this_for_maven.xml"
+    }
+]
