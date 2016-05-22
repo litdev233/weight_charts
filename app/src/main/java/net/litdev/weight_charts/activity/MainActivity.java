@@ -1,15 +1,19 @@
 package net.litdev.weight_charts.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -19,8 +23,12 @@ import net.litdev.weight_charts.R;
 import net.litdev.weight_charts.adapter.AdapterHomeList;
 import net.litdev.weight_charts.entity.WeightData;
 import net.litdev.weight_charts.utils.AppManager;
+import net.litdev.weight_charts.utils.CommonConstants;
+import net.litdev.weight_charts.utils.UtilsSerialize;
+import net.litdev.weight_charts.utils.UtilsSharedPreferences;
 import net.litdev.weight_charts.utils.UtilsToast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private List<WeightData> data_list;
     private AdapterHomeList adapter;
     private View footView;
+    private ProgressBar pb_bar;
 
     private final int curSize=10;
     //当前第几页
@@ -45,16 +54,26 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Bmob.initialize(this, getString(R.string.BmobAppID));
         AppManager.getAppManager().addActivity(this);
-        initView();
+        try {
+            initView();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
      * 初始化View
      */
-    private void initView() {
+    private void initView() throws IOException, ClassNotFoundException {
         footView = View.inflate(this,R.layout.footview_loading,null);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         ll_list = (PullToRefreshListView) findViewById(R.id.ll_list);
+        pb_bar = (ProgressBar) findViewById(R.id.pb_bar);
+        pb_bar.setVisibility(View.VISIBLE);
+        ll_list.setVisibility(View.GONE);
         data_list =new ArrayList<>();
         adapter = new AdapterHomeList(data_list,this);
         ll_list.setAdapter(adapter);
@@ -89,7 +108,21 @@ public class MainActivity extends AppCompatActivity {
         // endLabels.setRefreshingLabel("正在载入...");// 刷新时
         // endLabels.setReleaseLabel("放开加载...");// 下来达到一定距离时，显示的提示
 
+        String cache_data = UtilsSharedPreferences.getString(this,CommonConstants.HOME_DATA_LIST);
+        if(!TextUtils.isEmpty(cache_data)){
+            UtilsSerialize<List<WeightData>> serialize = new UtilsSerialize<>();
+            List<WeightData> list = serialize.deSerialization(cache_data);
+            if(list != null) {
+                addData(list);
+            }
+            //选择第一个
+            //ll_list.getRefreshableView().setSelection(0);
+            //手动刷新
+            //ll_list.setRefreshing(true);
+        }
+
         loadData(1);
+
 
         //下拉刷新
         ll_list.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
@@ -141,6 +174,10 @@ public class MainActivity extends AppCompatActivity {
      * @param page 当前页码
      */
     private void loadData(final int page){
+        if(page == 1){
+            ll_list.setRefreshing(true);
+        }
+
         final BmobQuery<WeightData> query = new BmobQuery<>();
         query.order("-AddTime");
         query.setSkip(curSize * (page - 1));
@@ -151,7 +188,23 @@ public class MainActivity extends AppCompatActivity {
             public void onSuccess(List<WeightData> list) {
                 if(page == 1){
                     data_list.clear();
+                    pb_bar.setVisibility(View.VISIBLE);
+                    ll_list.setVisibility(View.GONE);
+
+                    UtilsSerialize<List<WeightData>> serialize = new UtilsSerialize<>();
+                    String str = null;
+                    try {
+                        str = serialize.serialize(list);
+                    } catch (IOException e) {
+                    }
+
+                    if(!TextUtils.isEmpty(str)){
+                        //添加缓存
+                        UtilsSharedPreferences.addString(MainActivity.this, CommonConstants.HOME_DATA_LIST,str);
+                    }
+
                 }
+
                 curPage = page;
                 addData(list);
             }
@@ -160,6 +213,7 @@ public class MainActivity extends AppCompatActivity {
             public void onError(int i, String s) {
                 UtilsToast.show(MainActivity.this,"数据加载失败："+s);
                 ll_list.onRefreshComplete();
+                pb_bar.setVisibility(View.GONE);
             }
         });
     }
@@ -175,7 +229,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         adapter.notifyDataSetChanged();
-
+        ll_list.setVisibility(View.VISIBLE);
+        pb_bar.setVisibility(View.GONE);
         if(list.size() != 0){
             addFootView(ll_list,footView);
         }else{
