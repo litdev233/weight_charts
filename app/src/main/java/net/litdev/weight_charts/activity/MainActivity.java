@@ -19,6 +19,7 @@ import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
+import net.litdev.weight_charts.BaseActivity;
 import net.litdev.weight_charts.R;
 import net.litdev.weight_charts.adapter.AdapterHomeList;
 import net.litdev.weight_charts.entity.WeightData;
@@ -36,7 +37,7 @@ import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.FindListener;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private PullToRefreshListView ll_list;
     private List<WeightData> data_list;
@@ -53,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Bmob.initialize(this, getString(R.string.BmobAppID));
-        AppManager.getAppManager().addActivity(this);
         try {
             initView();
         } catch (IOException e) {

@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import net.litdev.weight_charts.BaseActivity;
 import net.litdev.weight_charts.R;
 import net.litdev.weight_charts.entity.WeightData;
 import net.litdev.weight_charts.inter.DialogDateListener;
@@ -27,7 +28,7 @@ import java.util.Date;
 import cn.bmob.v3.datatype.BmobDate;
 import cn.bmob.v3.listener.SaveListener;
 
-public class AddWeight extends AppCompatActivity {
+public class AddWeight extends BaseActivity {
 
     private CustomDateDialog dateDialog;
     private CustomTimeDialog timeDialog;
@@ -40,9 +41,7 @@ public class AddWeight extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_weight);
-        AppManager.getAppManager().addActivity(this);
-        ActionBar bar = getSupportActionBar();
-        bar.setTitle("新增记录");
+        getSupportActionBar().setTitle("新增记录");
 
         initView();
     }

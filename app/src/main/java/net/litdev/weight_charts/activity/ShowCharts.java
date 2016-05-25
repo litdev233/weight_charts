@@ -1,9 +1,12 @@
 package net.litdev.weight_charts.activity;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
+import net.litdev.weight_charts.BaseActivity;
 import net.litdev.weight_charts.R;
 import net.litdev.weight_charts.entity.WeightData;
 import net.litdev.weight_charts.utils.AppManager;
@@ -30,7 +33,7 @@ import lecho.lib.hellocharts.model.Viewport;
 import lecho.lib.hellocharts.util.ChartUtils;
 import lecho.lib.hellocharts.view.LineChartView;
 
-public class ShowCharts extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class ShowCharts extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     private LineChartView chart;
     private LineChartData data;
@@ -67,7 +70,24 @@ public class ShowCharts extends AppCompatActivity implements SwipeRefreshLayout.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_charts);
-        AppManager.getAppManager().addActivity(this);
+        initView();
+        generateValues();
+
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        //横屏
+        if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
+            numberOfPoints = 12;
+        }else{
+            numberOfPoints = 5;
+        }
+
+        randomNumbersTab = new double[numberOfLines][numberOfPoints];
+        xText = new String[numberOfPoints];
         initView();
         generateValues();
 
@@ -123,8 +143,8 @@ public class ShowCharts extends AppCompatActivity implements SwipeRefreshLayout.
      */
     private void resetViewport() {
         final Viewport v = new Viewport(chart.getMaximumViewport());
-        v.bottom = 30;
-        v.top = 70;
+        v.bottom = 50;
+        v.top = 60;
         v.left = 0;
         v.right = numberOfPoints - 1;
         chart.setMaximumViewport(v);
